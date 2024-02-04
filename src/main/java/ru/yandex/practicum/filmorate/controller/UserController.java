@@ -15,7 +15,7 @@ import java.util.Map;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    final private Map<Integer, User> users = new HashMap<>();
+    final Map<Integer, User> users = new HashMap<>();
     private int id = 1;
 
     @GetMapping
@@ -29,7 +29,7 @@ public class UserController {
         log.info("Получен запрос на создание нового пользователя c логином " + user.getLogin());
         validationUser(user);
         user.setId(id);
-        if(user.getName() == null || user.getName().isBlank()) {
+        if (user.getName() == null || user.getName().isBlank()) {
             users.put(id++, userNameIsBlack(user));
         } else users.put(id++, user);
         log.info("Пользователь с именем " + user.getLogin() + " добавлен");
@@ -40,7 +40,7 @@ public class UserController {
     public User putCreate(@Valid @RequestBody User user) {
         log.info("Получен запрос на изменение данных пользователя " + user.getName());
         validationUser(user);
-        if(users.containsKey(user.getId())) {
+        if (users.containsKey(user.getId())) {
             if (user.getName() == null || user.getName().isBlank()) {
                 users.put(user.getId(), userNameIsBlack(user));
             } else users.put(user.getId(), user);
@@ -50,15 +50,15 @@ public class UserController {
     }
 
     public static void validationUser(User user) {
-        if(user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
+        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             log.warn("Некорректно передан адрес электронной почты");
             throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ '@'");
         }
-        if(user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
+        if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
             log.warn("Некорректно передан логин пользователя");
             throw new ValidationException("Логин не может быть пустым и содержать пробелы");
         }
-        if(user.getBirthday().isAfter(LocalDate.now())) {
+        if (user.getBirthday().isAfter(LocalDate.now())) {
             log.warn("Некорректно передана дата рождения");
             throw new ValidationException("Дата рождения не может быть в будущем");
         }
