@@ -17,7 +17,7 @@ import java.util.Map;
 public class FilmController {
     private int id = 1;
     private final Map<Integer, Film> films = new HashMap<>();
-    private static final LocalDate firstRelease = LocalDate.of(1895,12,28);
+    private static final LocalDate firstRelease = LocalDate.of(1895, 12, 28);
 
     @GetMapping
     public Collection<Film> getAll() {
@@ -39,7 +39,7 @@ public class FilmController {
     public Film putCreate(@Valid @RequestBody Film film) {
         log.info("Получен запрос на изменение данных фильма " + film.getName());
         validationFilm(film);
-        if(films.containsKey(film.getId())) {
+        if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
             log.info("Данные фильма " + film.getName() + " изменены");
         } else throw new ValidationException("Не существует фильма с переданным ID");
@@ -47,19 +47,19 @@ public class FilmController {
     }
 
     public static void validationFilm(Film film) {
-        if(film.getReleaseDate().isBefore(firstRelease)) {
+        if (film.getReleaseDate().isBefore(firstRelease)) {
             log.warn("Некорректно передана дата выхода фильма");
             throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года");
         }
-        if(film.getName() == null || film.getName().isBlank()) {
+        if (film.getName() == null || film.getName().isBlank()) {
             log.warn("Некорректно передано название фильма");
             throw new ValidationException("Не задано имя фильма");
         }
-        if(film.getDescription() != null && film.getDescription().length() > 200) {
+        if (film.getDescription() != null && film.getDescription().length() > 200) {
             log.warn("Длина описания фильма > 200");
             throw new ValidationException("Максимальная длина описания — 200 символов");
         }
-        if(film.getDuration() <= 0) {
+        if (film.getDuration() <= 0) {
             log.warn("Некорректно передана продолжительность фильма");
             throw new ValidationException("Продолжительность фильма должна быть положительной");
         }
