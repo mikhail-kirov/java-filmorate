@@ -3,23 +3,23 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.IOException;
+/*import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.LocalDate;
+import java.net.http.HttpResponse;*/
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UserControllerTest {
 
-    private final HttpClient client = HttpClient.newHttpClient();
+    /*private final HttpClient client = HttpClient.newHttpClient();
 
-    private final URI url = URI.create("http://localhost:8080/users");
+    private final URI url = URI.create("http://localhost:8080/users");*/
 
     UserController userController = new UserController();
 
@@ -116,7 +116,7 @@ public class UserControllerTest {
         assertEquals("Дата рождения не может быть в будущем", e.getMessage());
     }
 
-    // при запущенном FilmorateApplication
+    /* при запущенном FilmorateApplication
     @Test
     void valUserEmptyRequestTest() {
         int status = 0;
@@ -132,5 +132,5 @@ public class UserControllerTest {
             e.getMessage();
         }
         assertEquals(400, status);
-    }
+    }*/
 }
