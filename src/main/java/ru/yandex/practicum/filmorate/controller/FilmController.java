@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.data.FilmData;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import lombok.extern.slf4j.Slf4j;
@@ -8,29 +9,27 @@ import lombok.extern.slf4j.Slf4j;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
-    private int id = 1;
-    private final Map<Integer, Film> films = new HashMap<>();
+    private final FilmData filmData = new FilmData();
+    private int id = filmData.getFilms().size() + 1;
     private static final LocalDate firstRelease = LocalDate.of(1895, 12, 28);
 
     @GetMapping
     public Collection<Film> getAll() {
         log.info("Получен запрос на получение списка всех фильмов");
-        return films.values();
+        return filmData.getFilms().values();
     }
 
     @PostMapping
     public Film postCreate(@Valid @RequestBody Film film) {
         log.info("Получен запрос на добавление нового фильма c названием " + film.getName());
         validationFilm(film);
-        film.setId(id);
-        films.put(id++, film);
+        film.setId(id++);
+        filmData.setFilm(film);
         log.info("Фильм " + film.getName() + " добавлен");
         return film;
     }
@@ -39,8 +38,8 @@ public class FilmController {
     public Film putCreate(@Valid @RequestBody Film film) {
         log.info("Получен запрос на изменение данных фильма " + film.getName());
         validationFilm(film);
-        if (films.containsKey(film.getId())) {
-            films.put(film.getId(), film);
+        if (filmData.getFilms().containsKey(film.getId())) {
+            filmData.setFilm(film);
             log.info("Данные фильма " + film.getName() + " изменены");
         } else throw new ValidationException("Не существует фильма с переданным ID");
         return film;

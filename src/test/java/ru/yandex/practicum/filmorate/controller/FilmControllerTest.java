@@ -5,11 +5,11 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import java.time.LocalDate;
 
-/*import java.net.URI;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.io.IOException;*/
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -17,10 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class FilmControllerTest {
 
     FilmController filmController = new FilmController();
-
-    /*private final HttpClient client = HttpClient.newHttpClient();
-
-    private final URI url = URI.create("http://localhost:8080/films");*/
+    private final HttpClient client = HttpClient.newHttpClient();
+    private final URI url = URI.create("http://localhost:8080/films");
 
     @Test
     void valFilmEmptyAndIsBlankNameTest() {
@@ -107,7 +105,7 @@ public class FilmControllerTest {
         assertEquals("Продолжительность фильма должна быть положительной", ex.getMessage());
     }
 
-    /* при запущенном FilmorateApplication
+    // при запущенном FilmorateApplication
     @Test
     void valFilmEmptyRequestTest() {
         int status = 0;
@@ -123,5 +121,5 @@ public class FilmControllerTest {
             e.getMessage();
         }
         assertEquals(400, status);
-    }*/
+    }
 }
