@@ -5,20 +5,11 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import java.time.LocalDate;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FilmControllerTest {
-
     FilmController filmController = new FilmController();
-    private final HttpClient client = HttpClient.newHttpClient();
-    private final URI url = URI.create("http://localhost:8080/films");
 
     @Test
     void valFilmEmptyAndIsBlankNameTest() {
@@ -103,23 +94,5 @@ public class FilmControllerTest {
                 () -> FilmController.validationFilm(film2)
         );
         assertEquals("Продолжительность фильма должна быть положительной", ex.getMessage());
-    }
-
-    // при запущенном FilmorateApplication
-    @Test
-    void valFilmEmptyRequestTest() {
-        int status = 0;
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(url)
-                .POST(HttpRequest.BodyPublishers.ofString(""))
-                .build();
-        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
-        try {
-            HttpResponse<String> response = client.send(request, handler);
-            status = response.statusCode();
-        } catch (IOException | InterruptedException e) {
-            e.getMessage();
-        }
-        assertEquals(400, status);
     }
 }

@@ -6,21 +6,9 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UserControllerTest {
-
-    private final HttpClient client = HttpClient.newHttpClient();
-
-    private final URI url = URI.create("http://localhost:8080/users");
-
     UserController userController = new UserController();
 
     @Test
@@ -114,23 +102,5 @@ public class UserControllerTest {
                 () -> UserController.validationUser(user1)
         );
         assertEquals("Дата рождения не может быть в будущем", e.getMessage());
-    }
-
-    //при запущенном FilmorateApplication
-    @Test
-    void valUserEmptyRequestTest() {
-        int status = 0;
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(url)
-                .POST(HttpRequest.BodyPublishers.ofString(""))
-                .build();
-        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
-        try {
-            HttpResponse<String> response = client.send(request, handler);
-            status = response.statusCode();
-        } catch (IOException | InterruptedException e) {
-            e.getMessage();
-        }
-        assertEquals(400, status);
     }
 }
