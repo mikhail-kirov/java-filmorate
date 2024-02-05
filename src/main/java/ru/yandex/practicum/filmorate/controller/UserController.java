@@ -32,7 +32,7 @@ public class UserController {
             userData.setUser(userNameIsBlack(user));
         } else  userData.setUser(user);
         log.info("Пользователь с именем " + user.getLogin() + " добавлен");
-        return userData.getUsers().get(id-1);
+        return userData.getUsers().get(id - 1);
     }
 
     @PutMapping
