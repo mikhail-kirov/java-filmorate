@@ -1,66 +1,62 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.data.FilmData;
+
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.service.FilmService;
+
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.Collection;
 
 @RestController
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
-    private final FilmData filmData = new FilmData();
-    private int id = filmData.getFilms().size() + 1;
-    private static final LocalDate firstRelease = LocalDate.of(1895, 12, 28);
+    private final FilmService filmService;
 
-    @GetMapping
-    public Collection<Film> getAll() {
-        log.info("Получен запрос на получение списка всех фильмов");
-        return filmData.getFilms().values();
+    @Autowired
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
+    }
+
+    @GetMapping("/{id}")
+    public Film getFilm(@Valid @PathVariable(value = "id") Integer id) {
+        return filmService.getFilm(id);
     }
 
     @PostMapping
-    public Film postCreate(@Valid @RequestBody Film film) {
-        log.info("Получен запрос на добавление нового фильма c названием " + film.getName());
-        validationFilm(film);
-        film.setId(id++);
-        filmData.setFilm(film);
-        log.info("Фильм " + film.getName() + " добавлен");
-        return film;
+    public Film postFilmCreate(@Valid @RequestBody Film film) {
+        return filmService.postFilm(film);
     }
 
     @PutMapping
-    public Film putCreate(@Valid @RequestBody Film film) {
-        log.info("Получен запрос на изменение данных фильма " + film.getName());
-        validationFilm(film);
-        if (filmData.getFilms().containsKey(film.getId())) {
-            filmData.setFilm(film);
-            log.info("Данные фильма " + film.getName() + " изменены");
-        } else throw new ValidationException("Не существует фильма с переданным ID");
-        return film;
+    public Film putFilmCreate(@Valid @RequestBody Film film) {
+        return filmService.putFilm(film);
     }
 
-    public static void validationFilm(Film film) {
-        if (film.getReleaseDate().isBefore(firstRelease)) {
-            log.warn("Некорректно передана дата выхода фильма");
-            throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года");
-        }
-        if (film.getName() == null || film.getName().isBlank()) {
-            log.warn("Некорректно передано название фильма");
-            throw new ValidationException("Не задано имя фильма");
-        }
-        if (film.getDescription() != null && film.getDescription().length() > 200) {
-            log.warn("Длина описания фильма > 200");
-            throw new ValidationException("Максимальная длина описания — 200 символов");
-        }
-        if (film.getDuration() <= 0) {
-            log.warn("Некорректно передана продолжительность фильма");
-            throw new ValidationException("Продолжительность фильма должна быть положительной");
-        }
+    @GetMapping
+    public Collection<Film> getAllFilm() {
+        return filmService.getAllFilm();
+    }
+
+    @PutMapping("/{id}/like/{userId}")
+    public Film putFilmLike(@Valid @PathVariable(value = "id") Integer id,
+                                   @PathVariable(value = "userId") Integer userId) {
+        return filmService.addLike(id, userId);
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public Film deleteFilmLike(@Valid @PathVariable(value = "id") Integer id,
+                                      @PathVariable(value = "userId") Integer userId) {
+        return filmService.removeLike(id, userId);
+    }
+
+    @GetMapping("/popular")
+    public Collection<Film> popularFilm(@Valid
+            @RequestParam(value = "count", defaultValue = "10", required = false) Integer count) {
+        return filmService.popularFilm(count);
     }
 }

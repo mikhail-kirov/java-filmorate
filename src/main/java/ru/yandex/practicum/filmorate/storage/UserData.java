@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.data;
+package ru.yandex.practicum.filmorate.storage;
 
 import lombok.Getter;
 import ru.yandex.practicum.filmorate.model.User;
