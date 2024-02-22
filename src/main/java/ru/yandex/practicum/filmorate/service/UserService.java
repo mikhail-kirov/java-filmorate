@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserService {
     UserStorage userStorage;
+
     @Autowired
     public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
