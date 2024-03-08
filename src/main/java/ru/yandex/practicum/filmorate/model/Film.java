@@ -20,6 +20,8 @@ public class Film {
     @Positive
     private final int duration;
     private Set<Integer> likes;
+    private final Genre genre;
+    private final Rating rating;
 
     public int compareByFilm() {
         return -likes.size();
